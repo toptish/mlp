@@ -27,6 +27,7 @@ def sigmoid(value, deriv=False):
 
     if deriv:
         return sigmoid(value) * (1 - sigmoid(value))
+        # return np.multiply(sigmoid(value), 1 - sigmoid(value))
     else:
         sigm = 1.0 / (1.0 + np.exp(-value))
         return sigm
@@ -42,13 +43,17 @@ def relu(value, deriv=False):
 
     if deriv:
         return 1. * (value > 0)
+        # return np.where(value > 0, value, 0)
+
     else:
         return np.maximum(0, value)
+        # return np.where(value > 0, 1, 0)
 
 
 def leaky_relu(value, slope=0.1, deriv=False):
     """
 
+    :param slope:
     :param deriv:
     :param value:
     :return:

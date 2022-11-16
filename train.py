@@ -31,8 +31,8 @@ def train(data, model, options, logs=True):
             for X, y in zip(batches_x, batches_y):
                 model.forward(X)
                 model.backward(X, y, options.learning_rate)
-            y_ = model.forward(x_train, predict=True, act_func_name=options.activation_func)
-            y_t = model.forward(x_test, predict=True, act_func_name=options.activation_func)
+            y_ = model.forward(x_train, predict=True)
+            y_t = model.forward(x_test, predict=True)
             l_train = loss(y_train, y_)
             l_test = loss(y_test, y_t)
             training_loss.append(l_train)
@@ -59,8 +59,8 @@ def main():
         # print(data.x.shape[1])
         output_dims = 2
         dense_layers = options.layers
-        model = MLP(input_dims, dense_layers, output_dims)
-        print(model.layers)
+        model = MLP(input_dims, dense_layers, output_dims, options.activation_func)
+        # print(model.layers)
         loss = train(data.train_test_split(), model, options)
         train_loss, test_loss = loss
         if options.loss:

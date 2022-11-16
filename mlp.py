@@ -44,7 +44,14 @@ class MLP(Net):
     """
 
     """
-    def __init__(self, input_size=2, layers=[16, 8], output=2):
+    def __init__(self, input_size:int = 2, layers: list = [16, 8], output: int = 2, act_func: str = 'tanh'):
+        """
+
+        :param input_size:
+        :param layers:
+        :param output:
+        :param act_func:
+        """
         super(MLP, self).__init__()
         self.layers = [input_size] + layers + [output]
         np.random.seed(0)
@@ -60,15 +67,18 @@ class MLP(Net):
         model['b3'] = np.zeros((1, output))
 
         model['layers'] = self.layers
+        model['activation'] = act_func
         self.model = model
 
-    def forward(self, X, predict=False, act_func_name: str = 'tanh'):
+    def forward(self, X, predict=False):
         """
 
         :param X:
         :param predict:
         :return:
         """
+        act_func_name = self.model['activation']
+
         w1, w2, w3 = self.model['w1'], self.model['w2'], self.model['w3']
         b1, b2, b3 = self.model['b1'], self.model['b2'], self.model['b3']
 
@@ -89,7 +99,7 @@ class MLP(Net):
             self.z_outputs = (z1, z2, z3)
         return y_
 
-    def backward(self, X, y, learning_rate=0.01, act_func_name: str = 'tanh'):
+    def backward(self, X, y, learning_rate=0.01):
         """
 
         :param X:
@@ -97,6 +107,8 @@ class MLP(Net):
         :param learning_rate:
         :return:
         """
+        act_func_name = self.model['activation']
+
         w1, w2, w3 = self.model['w1'], self.model['w2'], self.model['w3']
         # b1, b2, b3 = self.model['b1'], self.model['b2'], self.model['b3']
         a1, a2, y_ = self.activation_outputs
