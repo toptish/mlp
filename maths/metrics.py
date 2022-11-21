@@ -4,63 +4,62 @@ Module with key machine learning models metrics
 import numpy as np
 
 
-def compute_tp_tn_fp_fn(y: np.ndarray, predicted: np.ndarray):
+def compute_tp_tn_fp_fn(y_actual: np.ndarray, predicted: np.ndarray):
     """
     Takes y actual and predicted as input and returns numbers:
         TruePositive, TrueNegative, FalsePositive, FalseNegative
-    :param y: (np.ndarray) y actual data
+
+    :param y_actual: (np.ndarray) y actual data
     :param predicted: (np.ndarray) y predicted data
     :return: (TruePositive, TrueNegative, FalsePositive, FalseNegative)
     """
-    tp = np.sum((y == 1) & (predicted == 1))
-    tn = np.sum((y == 0) & (predicted == 0))
-    fp = np.sum((y == 0) & (predicted == 1))
-    fn = np.sum((y == 1) & (predicted == 0))
-    return tp, tn, fp, fn
+    true_positive = np.sum((y_actual == 1) & (predicted == 1))
+    true_negative = np.sum((y_actual == 0) & (predicted == 0))
+    false_positive = np.sum((y_actual == 0) & (predicted == 1))
+    false_negative = np.sum((y_actual == 1) & (predicted == 0))
+    return true_positive, true_negative, false_positive, false_negative
 
 
-def accuracy_score(y: np.ndarray, predicted: np.ndarray):
+def accuracy_score(y_actual: np.ndarray, predicted: np.ndarray):
     """
     Accuracy = (TP + TN) / (FP + FN + TP + TN)
-    :param y: (np.ndarray) y actual data
+    :param y_actual: (np.ndarray) y actual data
     :param predicted: (np.ndarray) y predicted data
     :return: (float) accuracy in decimal
     """
-    # tp, tn, fp, fn = compute_tp_tn_fp_fn(y, predicted)
-    # return ((tp + tn) / float(tp + tn + fp + fn))
-    return np.mean(predicted == y)
+    return np.mean(predicted == y_actual)
 
 
-def precision_score(y: np.ndarray, predicted: np.ndarray):
+def precision_score(y_actual: np.ndarray, predicted: np.ndarray):
     """
     Precision = TP / (TP + FP)
-    :param y: (np.ndarray) y actual data
+    :param y_actual: (np.ndarray) y actual data
     :param predicted: (np.ndarray) y predicted data
     :return: (float) precision in decimal
     """
-    tp, tn, fp, fn = compute_tp_tn_fp_fn(y, predicted)
-    return tp / float(tp + fp)
+    t_p, _, f_p, _ = compute_tp_tn_fp_fn(y_actual, predicted)
+    return t_p / float(t_p + f_p)
 
 
-def recall_score(y, predicted):
+def recall_score(y_actual, predicted):
     """
     Recall = TP / (FN + TP)
-    :param y: (np.ndarray) y actual data
+    :param y_actual: (np.ndarray) y actual data
     :param predicted: (np.ndarray) y predicted data
     :return: (float) recall in decimal
     """
-    tp, tn, fp, fn = compute_tp_tn_fp_fn(y, predicted)
-    return tp / (fn + tp)
+    t_p, _, _, f_n = compute_tp_tn_fp_fn(y_actual, predicted)
+    return t_p / (f_n + t_p)
 
 
-def f1_score(y: np.ndarray, predicted: np.ndarray):
+def f1_score(y_actual: np.ndarray, predicted: np.ndarray):
     """
     Harmonic mean of precision and recall
-    :param y: (np.ndarray) y actual data
+    :param y_actual: (np.ndarray) y actual data
     :param predicted: (np.ndarray) y predicted data
     :return: (float) F1 score in decimal
     """
-    precision = precision_score(y, predicted)
-    recall = recall_score(y, predicted)
-    f1 = (2 * precision * recall) / (precision + recall)
-    return f1
+    precision = precision_score(y_actual, predicted)
+    recall = recall_score(y_actual, predicted)
+    f1_metric = (2 * precision * recall) / (precision + recall)
+    return f1_metric
